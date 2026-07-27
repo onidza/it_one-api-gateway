@@ -1,22 +1,22 @@
 package ru.creditbank.apigateway.auth.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 public record RegisterRequest(
 
-        @NotNull
+        @JsonProperty("email")
         @NotBlank
         @Email
         @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
         String email,
 
+        @JsonProperty("fullname")
         @NotNull
-        @NotBlank
         @Valid
-        FullNameRequest fullNameRequest,
+        FullNameRequest fullName,
 
-        @NotNull
         @NotBlank
         @Size(min = 8, max = 64)
         @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$")

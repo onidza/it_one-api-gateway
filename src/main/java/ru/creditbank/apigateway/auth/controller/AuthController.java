@@ -26,7 +26,7 @@ public class AuthController {
     public ResponseEntity<Void> register(
             @Valid @RequestBody RegisterRequest request
     ) {
-        log.info("AuthController get request for register = {}", request);
+        log.info("Received registration request for email={}", request.email());
         authService.register(request);
 
         return ResponseEntity
@@ -38,7 +38,7 @@ public class AuthController {
     public ResponseEntity<LoginResponse> login(
             @Valid @RequestBody LoginRequest request
     ) {
-        log.info("AuthController get request for login = {}", request);
+        log.info("Received login request for email={}", request.email());
 
         return ResponseEntity.ok(authService.login(request));
     }
