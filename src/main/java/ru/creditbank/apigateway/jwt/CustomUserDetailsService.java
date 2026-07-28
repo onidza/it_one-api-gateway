@@ -1,7 +1,6 @@
-package ru.creditbank.apigateway.auth.service;
+package ru.creditbank.apigateway.jwt;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,11 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return User.builder()
                 .username(user.getEmail())
                 .password(user.getPasswordHash())
-                .authorities(
-                        new SimpleGrantedAuthority(
-                                "ROLE_" + user.getRole().name()
-                        )
-                )
+                .roles(user.getRole().name())
                 .build();
     }
 }

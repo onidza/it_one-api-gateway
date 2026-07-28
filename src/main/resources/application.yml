@@ -21,3 +21,9 @@ spring:
 logging:
   level:
     org.springframework.security: DEBUG
+
+security:
+  jwt:
+    issuer: apigateway
+    access-token-ttl: 30m
+    secret: ${JWT_SECRET}
