@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.creditbank.apigateway.auth.dto.LoginRequest;
-import ru.creditbank.apigateway.auth.dto.LoginResponse;
-import ru.creditbank.apigateway.auth.dto.RegisterRequest;
+import ru.creditbank.apigateway.auth.dto.LoginRequestDTO;
+import ru.creditbank.apigateway.auth.dto.LoginResponseDTO;
+import ru.creditbank.apigateway.auth.dto.RegisterRequestDTO;
 import ru.creditbank.apigateway.auth.service.AuthService;
 
 @RestController
@@ -24,9 +24,9 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<Void> register(
-            @Valid @RequestBody RegisterRequest request
+            @Valid @RequestBody RegisterRequestDTO request
     ) {
-        log.info("Received registration request for email={}", request.email());
+        log.info("Received registration request for email = {}", request.email());
         authService.register(request);
 
         return ResponseEntity
@@ -35,10 +35,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(
-            @Valid @RequestBody LoginRequest request
+    public ResponseEntity<LoginResponseDTO> login(
+            @Valid @RequestBody LoginRequestDTO request
     ) {
-        log.info("Received login request for email={}", request.email());
+        log.info("Received login request for email = {}", request.email());
 
         return ResponseEntity.ok(authService.login(request));
     }

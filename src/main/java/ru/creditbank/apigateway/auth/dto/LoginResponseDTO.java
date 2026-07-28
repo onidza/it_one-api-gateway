@@ -1,5 +1,5 @@
 package ru.creditbank.apigateway.auth.dto;
 
-public record LoginResponse(
+public record LoginResponseDTO(
         String token
 ) {}

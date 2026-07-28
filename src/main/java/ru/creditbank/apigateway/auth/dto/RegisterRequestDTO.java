@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
-public record RegisterRequest(
+public record RegisterRequestDTO(
 
         @JsonProperty("email")
         @NotBlank
@@ -15,7 +15,7 @@ public record RegisterRequest(
         @JsonProperty("fullname")
         @NotNull
         @Valid
-        FullNameRequest fullName,
+        FullNameDTO fullName,
 
         @NotBlank
         @Size(min = 8, max = 64)
