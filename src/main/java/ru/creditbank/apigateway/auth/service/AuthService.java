@@ -90,9 +90,7 @@ public class AuthService {
                         )
                 );
 
-        HttpSession session =
-                prepareSession(httpRequest);
-
+        HttpSession session = prepareSession(httpRequest);
         session.setAttribute(
                 SessionAttribute.AUTH_SESSION,
                 sessionData
