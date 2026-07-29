@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import ru.creditbank.apigateway.auth.entity.Role;
-import ru.creditbank.apigateway.auth.property.JwtProperties;
+import ru.creditbank.apigateway.config.JwtProperties;
 
 import java.security.SecureRandom;
 import java.time.Instant;

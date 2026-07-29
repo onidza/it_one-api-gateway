@@ -55,7 +55,7 @@ public class JwtHeaderInjectionFilter extends OncePerRequestFilter {
                 );
 
         log.debug(
-                "Injected mock Authorization header: method={}, uri={}",
+                "Injected mock Authorization header: method = {}, uri = {}",
                 request.getMethod(),
                 request.getRequestURI()
         );

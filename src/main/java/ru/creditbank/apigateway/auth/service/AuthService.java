@@ -13,9 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.creditbank.apigateway.auth.dto.*;
 import ru.creditbank.apigateway.auth.entity.UserEntity;
 import ru.creditbank.apigateway.auth.exception.UserAlreadyExistsException;
-import ru.creditbank.apigateway.auth.mapper.UserMapper;
-import ru.creditbank.apigateway.auth.property.JwtProperties;
 import ru.creditbank.apigateway.auth.repository.UserRepository;
+import ru.creditbank.apigateway.config.JwtProperties;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -26,7 +25,6 @@ import java.util.Objects;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -39,10 +37,14 @@ public class AuthService {
         }
 
         String passwordHash = passwordEncoder.encode(request.password());
-        UserEntity user = userMapper.toEntity(request, passwordHash);
-
-        userRepository.save(user);
-        log.info("New user was registered = {}", user.getId());
+        userRepository.save(new UserEntity(
+                request.email(),
+                passwordHash,
+                request.fullName().firstName(),
+                request.fullName().lastName(),
+                request.fullName().middleName()
+        ));
+        log.info("New user was registered = {}", request.email());
     }
 
     @Transactional(readOnly = true)

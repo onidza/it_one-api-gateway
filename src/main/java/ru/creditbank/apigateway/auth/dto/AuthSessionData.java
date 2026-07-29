@@ -1,6 +1,5 @@
 package ru.creditbank.apigateway.auth.dto;
 
-import java.io.Serializable;
 import java.time.Instant;
 
 public record AuthSessionData(
@@ -8,11 +7,8 @@ public record AuthSessionData(
         String accessToken,
         String refreshToken,
         Instant refreshTokenExpiresAt
-) implements Serializable {
-
-    public AuthSessionData withAccessToken(
-            String newAccessToken
-    ) {
+) {
+    public AuthSessionData withAccessToken(String newAccessToken) {
         return new AuthSessionData(
                 userId,
                 newAccessToken,
