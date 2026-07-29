@@ -6,8 +6,7 @@ import org.springframework.http.HttpHeaders;
 
 import java.util.*;
 
-public class AuthorizationHeaderRequestWrapper
-        extends HttpServletRequestWrapper {
+public class AuthorizationHeaderRequestWrapper extends HttpServletRequestWrapper {
 
     private final String authorizationHeader;
 

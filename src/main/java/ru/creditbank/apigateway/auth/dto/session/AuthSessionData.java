@@ -2,9 +2,10 @@ package ru.creditbank.apigateway.auth.dto.session;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.UUID;
 
 public record AuthSessionData(
-        Long userId,
+        UUID userId,
         String accessToken,
         String refreshToken,
         Instant refreshTokenExpiresAt
