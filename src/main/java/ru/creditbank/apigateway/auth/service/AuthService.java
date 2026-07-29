@@ -5,18 +5,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.creditbank.apigateway.auth.dto.LoginRequestDTO;
 import ru.creditbank.apigateway.auth.dto.LoginResponseDTO;
 import ru.creditbank.apigateway.auth.dto.RegisterRequestDTO;
+import ru.creditbank.apigateway.auth.dto.TokenResponseDTO;
 import ru.creditbank.apigateway.auth.entity.UserEntity;
 import ru.creditbank.apigateway.auth.exception.UserAlreadyExistsException;
 import ru.creditbank.apigateway.auth.mapper.UserMapper;
+import ru.creditbank.apigateway.auth.property.JwtProperties;
 import ru.creditbank.apigateway.auth.repository.UserRepository;
-import ru.creditbank.apigateway.jwt.JwtService;
+
+import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +30,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final JwtProperties jwtProperties;
 
     @Transactional
     public void register(RegisterRequestDTO request) {
@@ -42,24 +45,65 @@ public class AuthService {
         log.info("New user was registered = {}", user.getId());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public LoginResponseDTO login(LoginRequestDTO request) {
+        authenticationManager.authenticate(
+                UsernamePasswordAuthenticationToken
+                        .unauthenticated(
+                                request.email(),
+                                request.password()
+                        )
+        );
+
         UserEntity user = userRepository.findByEmail(request.email())
                 .orElseThrow(() ->
                         new BadCredentialsException("Invalid email or password"));
 
-        Authentication authentication =
-                authenticationManager.authenticate(
-                        UsernamePasswordAuthenticationToken
-                                .unauthenticated(
-                                        request.email(),
-                                        request.password()
-                                )
-                );
+        Instant now = Instant.now();
 
-        String token = jwtService.generateToken(authentication);
+        String accessToken = jwtService.generateAccessToken(
+                user.getEmail(),
+                user.getRole()
+        );
+        user.setAccessToken(accessToken);
+        user.setAccessTokenIssuedAt(now);
+
+        String refreshToken = jwtService.generateRefreshToken();
+        user.setRefreshToken(refreshToken);
+        user.setRefreshTokenExpiresAt(
+                now.plus(jwtProperties.refreshTokenTtl())
+        );
+
         log.info("User successfully logged in, id = {}", user.getId());
 
-        return new LoginResponseDTO(token);
+        return new LoginResponseDTO(
+                accessToken,
+                refreshToken
+        );
+    }
+
+    @Transactional
+    public TokenResponseDTO refresh(String refreshToken) {
+        UserEntity user = userRepository.findByRefreshToken(refreshToken)
+                .orElseThrow(() ->
+                        new BadCredentialsException("Invalid refresh token")
+                );
+
+        if (user.getRefreshTokenExpiresAt().isBefore(Instant.now())) {
+            throw new BadCredentialsException("Refresh token expired");
+        }
+
+        String newAccessToken = jwtService.generateAccessToken(
+                user.getEmail(),
+                user.getRole()
+        );
+
+        user.setAccessToken(newAccessToken);
+        user.setAccessTokenIssuedAt(Instant.now());
+
+        return new TokenResponseDTO(
+                newAccessToken,
+                refreshToken
+        );
     }
 }

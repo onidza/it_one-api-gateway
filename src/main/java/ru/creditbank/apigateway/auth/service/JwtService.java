@@ -1,17 +1,17 @@
-package ru.creditbank.apigateway.jwt;
+package ru.creditbank.apigateway.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
+import ru.creditbank.apigateway.auth.entity.Role;
 import ru.creditbank.apigateway.auth.property.JwtProperties;
 
-import java.time.Duration;
+import java.security.SecureRandom;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -21,26 +21,36 @@ public class JwtService {
 
     private final JwtEncoder jwtEncoder;
     private final JwtProperties jwtProperties;
+    private final SecureRandom secureRandom = new SecureRandom();
 
-    public String generateToken(Authentication authentication) {
+    public String generateAccessToken(
+            String subject,
+            Role role
+    ) {
         Instant now = Instant.now();
-
-        List<String> authorities = authentication.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .filter(authority -> authority.startsWith("ROLE_"))
-                .toList();
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer(jwtProperties.issuer())
-                .subject(authentication.getName())
+                .subject(subject)
                 .issuedAt(now)
                 .expiresAt(now.plus(jwtProperties.accessTokenTtl()))
-                .claim("authorities", authorities)
+                .claim(
+                        "authorities",
+                        List.of("ROLE_" + role.name())
+                )
                 .build();
 
         return jwtEncoder
                 .encode(JwtEncoderParameters.from(claims))
                 .getTokenValue();
+    }
+
+    public String generateRefreshToken() {
+        byte[] bytes = new byte[32];
+        secureRandom.nextBytes(bytes);
+
+        return Base64.getUrlEncoder()
+                .withoutPadding()
+                .encodeToString(bytes);
     }
 }

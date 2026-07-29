@@ -4,6 +4,10 @@ info:
   version: 1.0.0
   description: API для регистрации и входа пользователей
 
+servers:
+  - url: http://localhost:8080
+    description: Локальный сервер
+
 paths:
   /api/v1/auth/register:
     post:
@@ -25,7 +29,7 @@ paths:
                     firstname: "Имя"
                     lastname: "Фамилия"
                     middlename: "Отчество"
-                  password: "supersecuritypassword"
+                  password: "Credit123"
       responses:
         '201':
           description: Пользователь успешно зарегистрирован
@@ -50,7 +54,7 @@ paths:
               testLogin:
                 value:
                   email: "test@ya.ru"
-                  password: "supersecuritypassword"
+                  password: "Credit123"
       responses:
         '200':
           description: Успешный вход
@@ -91,7 +95,7 @@ components:
           maxLength: 64
           pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$'
           description: Должен содержать минимум одну заглавную букву, одну строчную букву и одну цифру
-          example: supersecuritypassword
+          example: Credit123
       additionalProperties: false
       description: Данные для регистрации пользователя
 
@@ -111,7 +115,7 @@ components:
           type: string
           minLength: 8
           maxLength: 64
-          example: supersecuritypassword
+          example: Credit123
           description: Пароль пользователя
       additionalProperties: false
       description: Данные для входа пользователя

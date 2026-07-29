@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.creditbank.apigateway.auth.dto.LoginRequestDTO;
-import ru.creditbank.apigateway.auth.dto.LoginResponseDTO;
-import ru.creditbank.apigateway.auth.dto.RegisterRequestDTO;
+import ru.creditbank.apigateway.auth.dto.*;
 import ru.creditbank.apigateway.auth.service.AuthService;
 
 @RestController
@@ -41,5 +39,12 @@ public class AuthController {
         log.info("Received login request for email = {}", request.email());
 
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/refresh")
+    public TokenResponseDTO refresh(
+            @RequestBody RefreshTokenRequestDTO request
+    ) {
+        return authService.refresh(request.refreshToken());
     }
 }

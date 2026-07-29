@@ -1,6 +1,6 @@
 package ru.creditbank.apigateway.auth.dto;
 
-public record ErrorResponse(
+public record ErrorResponseDTO(
         int status,
         String message
 ) {}

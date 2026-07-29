@@ -4,12 +4,12 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    username: postgres #.env
+    password: postgres #.env
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show_sql: true
 
     properties:
@@ -26,4 +26,5 @@ security:
   jwt:
     issuer: apigateway
     access-token-ttl: 30m
-    secret: ${JWT_SECRET}
+    secret: McHowHFh9zfPUjAu6VdpgKm+zzOTzrpNmElKZana3RM= #.env
+    refresh-token-ttl: 7d

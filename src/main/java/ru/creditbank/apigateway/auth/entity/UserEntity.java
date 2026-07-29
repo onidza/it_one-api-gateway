@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -55,4 +58,20 @@ public class UserEntity {
         this.middleName = middleName;
         this.role = Role.USER;
     }
+
+    @Setter
+    @Column(name = "access_token", length = 2048)
+    private String accessToken;
+
+    @Setter
+    @Column(name = "access_token_issued_at")
+    private Instant accessTokenIssuedAt;
+
+    @Setter
+    @Column(name = "refresh_token", length = 512)
+    private String refreshToken;
+
+    @Setter
+    @Column(name = "refresh_token_expires_at")
+    private Instant refreshTokenExpiresAt;
 }
