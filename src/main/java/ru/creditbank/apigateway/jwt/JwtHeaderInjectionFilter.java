@@ -4,23 +4,21 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.creditbank.apigateway.auth.entity.UserEntity;
-import ru.creditbank.apigateway.auth.repository.UserRepository;
+import ru.creditbank.apigateway.auth.dto.AuthSessionData;
+import ru.creditbank.apigateway.auth.dto.SessionAttribute;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtGenerationFilter extends OncePerRequestFilter {
-
-    private final UserRepository userRepository;
+public class JwtHeaderInjectionFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
@@ -37,11 +35,15 @@ public class JwtGenerationFilter extends OncePerRequestFilter {
             return;
         }
 
-        Optional<String> token = userRepository
-                .findFirstByAccessTokenIsNotNullOrderByAccessTokenIssuedAtDesc()
-                .map(UserEntity::getAccessToken);
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-        if (token.isEmpty()) {
+        AuthSessionData sessionData =
+                (AuthSessionData) session.getAttribute(SessionAttribute.AUTH_SESSION);
+        if (sessionData == null) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -49,7 +51,7 @@ public class JwtGenerationFilter extends OncePerRequestFilter {
         HttpServletRequest wrappedRequest =
                 new AuthorizationHeaderRequestWrapper(
                         request,
-                        token.get()
+                        sessionData.accessToken()
                 );
 
         log.debug(
@@ -68,6 +70,7 @@ public class JwtGenerationFilter extends OncePerRequestFilter {
         return path.equals("/api/v1/auth/register")
                 || path.equals("/api/v1/auth/login")
                 || path.equals("/api/v1/auth/refresh")
+                || path.equals("/error")
                 || path.startsWith("/swagger-ui")
                 || path.startsWith("/v3/api-docs");
     }

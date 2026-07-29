@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.creditbank.apigateway.jwt.JwtGenerationFilter;
+import ru.creditbank.apigateway.jwt.JwtHeaderInjectionFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ import ru.creditbank.apigateway.jwt.JwtGenerationFilter;
 public class SecurityConfig {
 
     private final JwtAuthenticationConverter jwtAuthenticationConverter;
-    private final JwtGenerationFilter jwtGenerationFilter;
+    private final JwtHeaderInjectionFilter jwtHeaderInjectionFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -67,7 +67,7 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(
-                                SessionCreationPolicy.STATELESS
+                                SessionCreationPolicy.IF_REQUIRED
                         )
                 )
                 .oauth2ResourceServer(resourceServer ->
@@ -78,7 +78,7 @@ public class SecurityConfig {
                         )
                 )
                 .addFilterBefore(
-                        jwtGenerationFilter,
+                        jwtHeaderInjectionFilter,
                         BearerTokenAuthenticationFilter.class
                 )
                 .build();

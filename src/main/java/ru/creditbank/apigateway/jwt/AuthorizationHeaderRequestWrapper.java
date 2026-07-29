@@ -13,10 +13,10 @@ public class AuthorizationHeaderRequestWrapper
 
     public AuthorizationHeaderRequestWrapper(
             HttpServletRequest request,
-            String token
+            String accessToken
     ) {
         super(request);
-        this.authorizationHeader = "Bearer " + token;
+        this.authorizationHeader = "Bearer " + accessToken;
     }
 
     @Override

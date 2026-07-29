@@ -1,5 +1,6 @@
 package ru.creditbank.apigateway.auth.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,17 +35,24 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(
-            @Valid @RequestBody LoginRequestDTO request
+            @Valid @RequestBody LoginRequestDTO request,
+            HttpServletRequest httpRequest
     ) {
         log.info("Received login request for email = {}", request.email());
 
-        return ResponseEntity.ok(authService.login(request));
+        return ResponseEntity.ok(
+                authService.login(request, httpRequest)
+        );
     }
 
     @PostMapping("/refresh")
     public TokenResponseDTO refresh(
-            @RequestBody RefreshTokenRequestDTO request
+            @RequestBody RefreshTokenRequestDTO request,
+            HttpServletRequest httpRequest
     ) {
-        return authService.refresh(request.refreshToken());
+        return authService.refresh(
+                request.refreshToken(),
+                httpRequest
+        );
     }
 }

@@ -1,5 +1,7 @@
 package ru.creditbank.apigateway.auth.service;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,10 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.creditbank.apigateway.auth.dto.LoginRequestDTO;
-import ru.creditbank.apigateway.auth.dto.LoginResponseDTO;
-import ru.creditbank.apigateway.auth.dto.RegisterRequestDTO;
-import ru.creditbank.apigateway.auth.dto.TokenResponseDTO;
+import ru.creditbank.apigateway.auth.dto.*;
 import ru.creditbank.apigateway.auth.entity.UserEntity;
 import ru.creditbank.apigateway.auth.exception.UserAlreadyExistsException;
 import ru.creditbank.apigateway.auth.mapper.UserMapper;
@@ -19,6 +18,7 @@ import ru.creditbank.apigateway.auth.property.JwtProperties;
 import ru.creditbank.apigateway.auth.repository.UserRepository;
 
 import java.time.Instant;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -45,38 +45,62 @@ public class AuthService {
         log.info("New user was registered = {}", user.getId());
     }
 
-    @Transactional
-    public LoginResponseDTO login(LoginRequestDTO request) {
-        log.info("Try to login with email = {}", request.email());
+    @Transactional(readOnly = true)
+    public LoginResponseDTO login(
+            LoginRequestDTO request,
+            HttpServletRequest httpRequest
+    ) {
+        log.info(
+                "Try to login with email = {}",
+                request.email()
+        );
 
         authenticationManager.authenticate(
-                UsernamePasswordAuthenticationToken
-                        .unauthenticated(
-                                request.email(),
-                                request.password()
-                        )
+                UsernamePasswordAuthenticationToken.unauthenticated(
+                        request.email(),
+                        request.password()
+                )
         );
 
         UserEntity user = userRepository.findByEmail(request.email())
                 .orElseThrow(() ->
-                        new BadCredentialsException("Invalid email or password"));
+                        new BadCredentialsException(
+                                "Invalid email or password"
+                        )
+                );
 
-        Instant now = Instant.now();
+        String accessToken =
+                jwtService.generateAccessToken(
+                        user.getEmail(),
+                        user.getRole()
+                );
 
-        String accessToken = jwtService.generateAccessToken(
-                user.getEmail(),
-                user.getRole()
+        String refreshToken =
+                jwtService.generateRefreshToken();
+
+        AuthSessionData sessionData =
+                new AuthSessionData(
+                        user.getId(),
+                        accessToken,
+                        refreshToken,
+                        Instant.now().plus(
+                                jwtProperties.refreshTokenTtl()
+                        )
+                );
+
+        HttpSession session =
+                prepareSession(httpRequest);
+
+        session.setAttribute(
+                SessionAttribute.AUTH_SESSION,
+                sessionData
         );
-        user.setAccessToken(accessToken);
-        user.setAccessTokenIssuedAt(now);
 
-        String refreshToken = jwtService.generateRefreshToken();
-        user.setRefreshToken(refreshToken);
-        user.setRefreshTokenExpiresAt(
-                now.plus(jwtProperties.refreshTokenTtl())
+        log.info(
+                "User successfully logged in, userId = {}, sessionId = {}",
+                user.getId(),
+                session.getId()
         );
-
-        log.info("User successfully logged in, email = {}", user.getEmail());
 
         return new LoginResponseDTO(
                 accessToken,
@@ -84,29 +108,112 @@ public class AuthService {
         );
     }
 
-    @Transactional
-    public TokenResponseDTO refresh(String refreshToken) {
-        UserEntity user = userRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() ->
-                        new BadCredentialsException("Invalid refresh token")
-                );
+    @Transactional(readOnly = true)
+    public TokenResponseDTO refresh(
+            String providedRefreshToken,
+            HttpServletRequest request
+    ) {
+        HttpSession session =
+                requireSession(request);
 
-        if (user.getRefreshTokenExpiresAt().isBefore(Instant.now())) {
-            throw new BadCredentialsException("Refresh token expired");
+        AuthSessionData sessionData =
+                requireAuthSessionData(session);
+
+        if (!Objects.equals(
+                sessionData.refreshToken(),
+                providedRefreshToken
+        )) {
+            throw new BadCredentialsException(
+                    "Invalid refresh token"
+            );
         }
 
-        String newAccessToken = jwtService.generateAccessToken(
-                user.getEmail(),
-                user.getRole()
+        if (!sessionData.refreshTokenExpiresAt()
+                .isAfter(Instant.now())) {
+
+            session.invalidate();
+
+            throw new BadCredentialsException(
+                    "Refresh token expired"
+            );
+        }
+
+        UserEntity user = userRepository.findById(sessionData.userId())
+                .orElseThrow(() -> {
+                            session.invalidate();
+
+                            return new BadCredentialsException(
+                                    "User not found"
+                            );
+                        }
+                );
+
+        String newAccessToken =
+                jwtService.generateAccessToken(
+                        user.getEmail(),
+                        user.getRole()
+                );
+
+        session.setAttribute(
+                SessionAttribute.AUTH_SESSION,
+                sessionData.withAccessToken(
+                        newAccessToken
+                )
         );
 
-        user.setAccessToken(newAccessToken);
-        user.setAccessTokenIssuedAt(Instant.now());
-        log.info("New access token was set for user, email = {}", user.getEmail());
+        log.info(
+                "New access token was generated, userId = {}",
+                user.getId()
+        );
 
         return new TokenResponseDTO(
                 newAccessToken,
-                refreshToken
+                sessionData.refreshToken()
         );
+    }
+
+    private HttpSession prepareSession(
+            HttpServletRequest request
+    ) {
+        HttpSession session = request.getSession(false);
+
+        if (session == null) {
+            return request.getSession(true);
+        }
+
+        request.changeSessionId();
+
+        return session;
+    }
+
+    private HttpSession requireSession(
+            HttpServletRequest request
+    ) {
+        HttpSession session =
+                request.getSession(false);
+
+        if (session == null) {
+            throw new BadCredentialsException(
+                    "Authentication session not found"
+            );
+        }
+
+        return session;
+    }
+
+    private AuthSessionData requireAuthSessionData(
+            HttpSession session
+    ) {
+        Object attribute = session.getAttribute(SessionAttribute.AUTH_SESSION);
+
+        if (!(attribute instanceof AuthSessionData sessionData)) {
+            session.invalidate();
+
+            throw new BadCredentialsException(
+                    "Invalid authentication session"
+            );
+        }
+
+        return sessionData;
     }
 }
