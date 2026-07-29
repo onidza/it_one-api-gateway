@@ -19,7 +19,7 @@ import ru.creditbank.apigateway.auth.dto.token.TokenResponseDTO;
 import ru.creditbank.apigateway.auth.entity.UserEntity;
 import ru.creditbank.apigateway.auth.exception.UserAlreadyExistsException;
 import ru.creditbank.apigateway.auth.repository.UserRepository;
-import ru.creditbank.apigateway.config.JwtProperties;
+import ru.creditbank.apigateway.config.property.JwtProperties;
 
 import java.time.Instant;
 import java.util.Objects;

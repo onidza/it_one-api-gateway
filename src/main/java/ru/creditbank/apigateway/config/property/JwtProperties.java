@@ -1,4 +1,4 @@
-package ru.creditbank.apigateway.config;
+package ru.creditbank.apigateway.config.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

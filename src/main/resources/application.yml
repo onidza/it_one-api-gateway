@@ -28,3 +28,7 @@ security:
     access-token-ttl: 30m
     secret: McHowHFh9zfPUjAu6VdpgKm+zzOTzrpNmElKZana3RM= #.env
     refresh-token-ttl: 7d
+
+rest:
+  credit-service:
+    url: http://localhost:8081/credit-service
