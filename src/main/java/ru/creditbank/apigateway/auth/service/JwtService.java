@@ -40,6 +40,9 @@ public class JwtService {
                 )
                 .build();
 
+        log.debug("Generated access token for user, email = {}, role = {}",
+                subject, role);
+
         return jwtEncoder
                 .encode(JwtEncoderParameters.from(claims))
                 .getTokenValue();
@@ -48,6 +51,8 @@ public class JwtService {
     public String generateRefreshToken() {
         byte[] bytes = new byte[32];
         secureRandom.nextBytes(bytes);
+
+        log.debug("Generated refresh token");
 
         return Base64.getUrlEncoder()
                 .withoutPadding()

@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -14,6 +15,7 @@ import ru.creditbank.apigateway.auth.repository.UserRepository;
 import java.io.IOException;
 import java.util.Optional;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtGenerationFilter extends OncePerRequestFilter {
@@ -49,6 +51,12 @@ public class JwtGenerationFilter extends OncePerRequestFilter {
                         request,
                         token.get()
                 );
+
+        log.debug(
+                "Injected mock Authorization header: method={}, uri={}",
+                request.getMethod(),
+                request.getRequestURI()
+        );
 
         filterChain.doFilter(wrappedRequest, response);
     }

@@ -47,6 +47,8 @@ public class AuthService {
 
     @Transactional
     public LoginResponseDTO login(LoginRequestDTO request) {
+        log.info("Try to login with email = {}", request.email());
+
         authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken
                         .unauthenticated(
@@ -74,7 +76,7 @@ public class AuthService {
                 now.plus(jwtProperties.refreshTokenTtl())
         );
 
-        log.info("User successfully logged in, id = {}", user.getId());
+        log.info("User successfully logged in, email = {}", user.getEmail());
 
         return new LoginResponseDTO(
                 accessToken,
@@ -100,6 +102,7 @@ public class AuthService {
 
         user.setAccessToken(newAccessToken);
         user.setAccessTokenIssuedAt(Instant.now());
+        log.info("New access token was set for user, email = {}", user.getEmail());
 
         return new TokenResponseDTO(
                 newAccessToken,
