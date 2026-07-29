@@ -13,6 +13,7 @@ import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -24,6 +25,7 @@ public class JwtService {
     private final SecureRandom secureRandom = new SecureRandom();
 
     public String generateAccessToken(
+            UUID userId,
             String subject,
             Role role
     ) {
@@ -34,6 +36,7 @@ public class JwtService {
                 .subject(subject)
                 .issuedAt(now)
                 .expiresAt(now.plus(jwtProperties.accessTokenTtl()))
+                .claim("user_id", userId.toString())
                 .claim(
                         "authorities",
                         List.of("ROLE_" + role.name())
