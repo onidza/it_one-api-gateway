@@ -1,4 +1,4 @@
-package ru.creditbank.apigateway.auth.dto;
+package ru.creditbank.apigateway.auth.dto.login;
 
 public record LoginResponseDTO(
         String accessToken,

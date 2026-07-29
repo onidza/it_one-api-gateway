@@ -1,11 +1,11 @@
-package ru.creditbank.apigateway.auth.controller;
+package ru.creditbank.apigateway.auth.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.creditbank.apigateway.auth.dto.ErrorResponseDTO;
+import ru.creditbank.apigateway.auth.dto.error.ErrorResponseDTO;
 import ru.creditbank.apigateway.auth.exception.UserAlreadyExistsException;
 
 @RestControllerAdvice

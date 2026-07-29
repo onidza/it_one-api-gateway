@@ -10,7 +10,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.creditbank.apigateway.auth.dto.*;
+import ru.creditbank.apigateway.auth.dto.login.LoginRequestDTO;
+import ru.creditbank.apigateway.auth.dto.login.LoginResponseDTO;
+import ru.creditbank.apigateway.auth.dto.register.RegisterRequestDTO;
+import ru.creditbank.apigateway.auth.dto.session.AuthSessionData;
+import ru.creditbank.apigateway.auth.dto.session.SessionAttribute;
+import ru.creditbank.apigateway.auth.dto.token.TokenResponseDTO;
 import ru.creditbank.apigateway.auth.entity.UserEntity;
 import ru.creditbank.apigateway.auth.exception.UserAlreadyExistsException;
 import ru.creditbank.apigateway.auth.repository.UserRepository;

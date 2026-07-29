@@ -10,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.creditbank.apigateway.auth.dto.AuthSessionData;
-import ru.creditbank.apigateway.auth.dto.SessionAttribute;
+import ru.creditbank.apigateway.auth.dto.session.AuthSessionData;
+import ru.creditbank.apigateway.auth.dto.session.SessionAttribute;
 
 import java.io.IOException;
 

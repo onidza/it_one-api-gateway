@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.creditbank.apigateway.auth.dto.*;
+import ru.creditbank.apigateway.auth.dto.login.LoginRequestDTO;
+import ru.creditbank.apigateway.auth.dto.login.LoginResponseDTO;
+import ru.creditbank.apigateway.auth.dto.register.RegisterRequestDTO;
+import ru.creditbank.apigateway.auth.dto.token.RefreshTokenRequestDTO;
+import ru.creditbank.apigateway.auth.dto.token.TokenResponseDTO;
 import ru.creditbank.apigateway.auth.service.AuthService;
 
 @RestController

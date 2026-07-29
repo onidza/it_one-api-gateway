@@ -1,4 +1,4 @@
-package ru.creditbank.apigateway.auth.dto;
+package ru.creditbank.apigateway.auth.dto.session;
 
 import java.io.Serializable;
 import java.time.Instant;
