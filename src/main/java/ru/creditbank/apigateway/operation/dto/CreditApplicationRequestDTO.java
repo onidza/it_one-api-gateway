@@ -18,11 +18,10 @@ public record CreditApplicationRequestDTO(
 
         @Schema(
                 description = "Запрашиваемая сумма кредита",
-                example = "50000.00"
+                example = "50000"
         )
         @NotNull
         @Positive
-        @Digits(integer = 15, fraction = 2)
         BigDecimal requestedAmount,
 
         @Schema(
