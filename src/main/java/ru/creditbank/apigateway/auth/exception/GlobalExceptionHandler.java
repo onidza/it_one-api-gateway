@@ -1,13 +1,16 @@
-package ru.creditbank.apigateway.auth.handler;
+package ru.creditbank.apigateway.auth.exception;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.RestClientResponseException;
 import ru.creditbank.apigateway.auth.dto.error.ErrorResponseDTO;
-import ru.creditbank.apigateway.auth.exception.UserAlreadyExistsException;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -37,5 +40,30 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(response);
+    }
+
+    @ExceptionHandler(RestClientResponseException.class)
+    public ResponseEntity<byte[]> handleRestClientResponseException(
+            RestClientResponseException exception
+    ) {
+        log.warn(
+                "Downstream service returned status = {}",
+                exception.getStatusCode()
+        );
+
+        HttpHeaders headers = new HttpHeaders();
+
+        if (exception.getResponseHeaders() != null
+                && exception.getResponseHeaders().getContentType() != null) {
+            headers.setContentType(
+                    exception.getResponseHeaders().getContentType()
+            );
+        }
+
+        return new ResponseEntity<>(
+                exception.getResponseBodyAsByteArray(),
+                headers,
+                exception.getStatusCode()
+        );
     }
 }
