@@ -31,4 +31,4 @@ security:
 
 rest:
   credit-service:
-    url: http://localhost:8081/credit-service
+    url: http://localhost:8081

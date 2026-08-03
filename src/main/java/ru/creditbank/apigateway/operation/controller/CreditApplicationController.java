@@ -29,7 +29,7 @@ public class CreditApplicationController {
     log.info("Received credit application request");
 
     return creditServiceRestClient.post()
-        .uri("/api/v1/credit")
+        .uri("/credit-service/api/v1/credit")
         .headers(headers ->
             headers.setBearerAuth(accessToken.getTokenValue()))
         .body(request)
