@@ -8,21 +8,21 @@ import jakarta.validation.constraints.Size;
 
 public record FullNameDTO(
 
-    @Schema(example = "Ivan")
+    @Schema(description = "Имя", example = "Ivan")
     @JsonProperty("firstname")
     @NotBlank
     @Size(min = 2, max = 50)
     @Pattern(regexp = "^[А-Яа-яЁёA-Za-z-]+$")
     String firstName,
 
-    @Schema(example = "Stupnitsky")
+    @Schema(description = "Фамилия", example = "Stupnitsky")
     @JsonProperty("lastname")
     @NotBlank
     @Size(min = 2, max = 50)
     @Pattern(regexp = "^[А-Яа-яЁёA-Za-z-]+$")
     String lastName,
 
-    @Schema(example = "Vladimirovich")
+    @Schema(description = "Отчество", example = "Vladimirovich")
     @JsonProperty("middlename")
     @Size(min = 2, max = 50)
     @Pattern(regexp = "^[А-Яа-яЁёA-Za-z-]+$")
