@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.creditbank.apigateway.jwt.JwtHeaderInjectionFilter;
+import ru.creditbank.apigateway.auth.jwt.JwtHeaderInjectionFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -65,10 +65,13 @@ public class SecurityConfig {
                 "/error")
             .permitAll()
 
-            .requestMatchers(
-                HttpMethod.POST, "/api/v1/credit"
-            )
-            .hasRole("USER")
+            .requestMatchers(HttpMethod.POST, "/api/v1/credit").hasRole("USER")
+
+            .requestMatchers(HttpMethod.GET,"/api/v1/credit{id}")
+            .hasRole("CREDIT_MANAGER")
+
+            .requestMatchers(HttpMethod.PATCH,"/api/v1/credit{id}/status")
+            .hasRole("CREDIT_MANAGER")
 
             .anyRequest().authenticated()
         )

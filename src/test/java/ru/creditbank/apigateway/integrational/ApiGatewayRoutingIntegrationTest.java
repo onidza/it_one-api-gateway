@@ -28,7 +28,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.creditbank.apigateway.config.TestcontainersConfiguration;
-import ru.creditbank.apigateway.operation.dto.CreditApplicationRequestDTO;
+import ru.creditbank.apigateway.operation.dto.application.CreditApplicationRequestDTO;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest

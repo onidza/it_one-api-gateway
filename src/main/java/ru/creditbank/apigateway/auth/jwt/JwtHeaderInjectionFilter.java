@@ -1,4 +1,4 @@
-package ru.creditbank.apigateway.jwt;
+package ru.creditbank.apigateway.auth.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

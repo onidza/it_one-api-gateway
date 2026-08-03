@@ -1,4 +1,4 @@
-package ru.creditbank.apigateway.jwt;
+package ru.creditbank.apigateway.auth.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;

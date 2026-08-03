@@ -1,4 +1,4 @@
-package ru.creditbank.apigateway.operation.dto;
+package ru.creditbank.apigateway.operation.dto.application;
 
 import java.time.Instant;
 import java.util.UUID;

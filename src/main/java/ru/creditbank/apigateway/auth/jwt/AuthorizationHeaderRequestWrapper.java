@@ -1,4 +1,4 @@
-package ru.creditbank.apigateway.jwt;
+package ru.creditbank.apigateway.auth.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
