@@ -14,56 +14,56 @@ import ru.creditbank.apigateway.auth.dto.error.ErrorResponseDTO;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorResponseDTO> handleBadCredentials(
-            BadCredentialsException exception
-    ) {
-        ErrorResponseDTO response = new ErrorResponseDTO(
-                HttpStatus.UNAUTHORIZED.value(),
-                exception.getMessage()
-        );
+  @ExceptionHandler(BadCredentialsException.class)
+  public ResponseEntity<ErrorResponseDTO> handleBadCredentials(
+      BadCredentialsException exception
+  ) {
+    ErrorResponseDTO response = new ErrorResponseDTO(
+        HttpStatus.UNAUTHORIZED.value(),
+        exception.getMessage()
+    );
 
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(response);
+    return ResponseEntity
+        .status(HttpStatus.UNAUTHORIZED)
+        .body(response);
+  }
+
+  @ExceptionHandler(UserAlreadyExistsException.class)
+  public ResponseEntity<ErrorResponseDTO> handleUserAlreadyExists(
+      UserAlreadyExistsException exception
+  ) {
+    ErrorResponseDTO response = new ErrorResponseDTO(
+        HttpStatus.CONFLICT.value(),
+        exception.getMessage()
+    );
+
+    return ResponseEntity
+        .status(HttpStatus.CONFLICT)
+        .body(response);
+  }
+
+  @ExceptionHandler(RestClientResponseException.class)
+  public ResponseEntity<byte[]> handleRestClientResponseException(
+      RestClientResponseException exception
+  ) {
+    log.warn(
+        "Downstream service returned status = {}",
+        exception.getStatusCode()
+    );
+
+    HttpHeaders headers = new HttpHeaders();
+
+    if (exception.getResponseHeaders() != null
+        && exception.getResponseHeaders().getContentType() != null) {
+      headers.setContentType(
+          exception.getResponseHeaders().getContentType()
+      );
     }
 
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponseDTO> handleUserAlreadyExists(
-            UserAlreadyExistsException exception
-    ) {
-        ErrorResponseDTO response = new ErrorResponseDTO(
-                HttpStatus.CONFLICT.value(),
-                exception.getMessage()
-        );
-
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(response);
-    }
-
-    @ExceptionHandler(RestClientResponseException.class)
-    public ResponseEntity<byte[]> handleRestClientResponseException(
-            RestClientResponseException exception
-    ) {
-        log.warn(
-                "Downstream service returned status = {}",
-                exception.getStatusCode()
-        );
-
-        HttpHeaders headers = new HttpHeaders();
-
-        if (exception.getResponseHeaders() != null
-                && exception.getResponseHeaders().getContentType() != null) {
-            headers.setContentType(
-                    exception.getResponseHeaders().getContentType()
-            );
-        }
-
-        return new ResponseEntity<>(
-                exception.getResponseBodyAsByteArray(),
-                headers,
-                exception.getStatusCode()
-        );
-    }
+    return new ResponseEntity<>(
+        exception.getResponseBodyAsByteArray(),
+        headers,
+        exception.getStatusCode()
+    );
+  }
 }

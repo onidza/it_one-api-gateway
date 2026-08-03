@@ -3,6 +3,7 @@ package ru.creditbank.apigateway.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -24,66 +25,71 @@ import ru.creditbank.apigateway.jwt.JwtHeaderInjectionFilter;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtAuthenticationConverter jwtAuthenticationConverter;
-    private final JwtHeaderInjectionFilter jwtHeaderInjectionFilter;
+  private final JwtAuthenticationConverter jwtAuthenticationConverter;
+  private final JwtHeaderInjectionFilter jwtHeaderInjectionFilter;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-            UserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder
-    ) {
-        DaoAuthenticationProvider provider =
-                new DaoAuthenticationProvider(userDetailsService);
+  @Bean
+  public AuthenticationManager authenticationManager(
+      UserDetailsService userDetailsService,
+      PasswordEncoder passwordEncoder
+  ) {
+    DaoAuthenticationProvider provider =
+        new DaoAuthenticationProvider(userDetailsService);
 
-        provider.setPasswordEncoder(passwordEncoder);
+    provider.setPasswordEncoder(passwordEncoder);
 
-        return new ProviderManager(provider);
-    }
+    return new ProviderManager(provider);
+  }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/v1/auth/register",
-                                "/api/v1/auth/login",
-                                "/api/v1/auth/refresh"
-                        ).permitAll()
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+    return http
+        .csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(
+                "/api/v1/auth/register",
+                "/api/v1/auth/login",
+                "/api/v1/auth/refresh"
+            ).permitAll()
 
-                        .requestMatchers(
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/v3/api-docs/**",
-                                "/v3/api-docs.yaml",
-                                "/error")
-                        .permitAll()
+            .requestMatchers(
+                "/swagger-ui/**",
+                "/swagger-ui.html",
+                "/v3/api-docs/**",
+                "/v3/api-docs.yaml",
+                "/error")
+            .permitAll()
 
-                        .anyRequest().authenticated()
+            .requestMatchers(
+                HttpMethod.POST, "/api/v1/credit"
+            )
+            .hasRole("USER")
+
+            .anyRequest().authenticated()
+        )
+        .sessionManagement(session -> session
+            .sessionCreationPolicy(
+                SessionCreationPolicy.IF_REQUIRED
+            )
+            .sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::none
+            )
+        )
+        .oauth2ResourceServer(resourceServer ->
+            resourceServer.jwt(jwt ->
+                jwt.jwtAuthenticationConverter(
+                    jwtAuthenticationConverter
                 )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(
-                                SessionCreationPolicy.IF_REQUIRED
-                        )
-                        .sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::none
-                        )
-                )
-                .oauth2ResourceServer(resourceServer ->
-                        resourceServer.jwt(jwt ->
-                                jwt.jwtAuthenticationConverter(
-                                        jwtAuthenticationConverter
-                                )
-                        )
-                )
-                .addFilterBefore(
-                        jwtHeaderInjectionFilter,
-                        BearerTokenAuthenticationFilter.class
-                )
-                .build();
-    }
+            )
+        )
+        .addFilterBefore(
+            jwtHeaderInjectionFilter,
+            BearerTokenAuthenticationFilter.class
+        )
+        .build();
+  }
 }

@@ -7,4 +7,6 @@ public record CreditApplicationResponseDTO(
     UUID id,
     Status status,
     Instant createdAt
-) {}
+) {
+
+}

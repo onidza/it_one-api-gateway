@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -13,65 +14,63 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import ru.creditbank.apigateway.auth.dto.session.AuthSessionData;
 import ru.creditbank.apigateway.auth.dto.session.SessionAttribute;
 
-import java.io.IOException;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtHeaderInjectionFilter extends OncePerRequestFilter {
 
-    @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      FilterChain filterChain
+  ) throws ServletException, IOException {
 
-        String existingAuthorization =
-                request.getHeader(HttpHeaders.AUTHORIZATION);
+    String existingAuthorization =
+        request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (existingAuthorization != null) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+    if (existingAuthorization != null) {
+      filterChain.doFilter(request, response);
+      return;
+    }
 
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+    HttpSession session = request.getSession(false);
+    if (session == null) {
+      filterChain.doFilter(request, response);
+      return;
+    }
 
-        AuthSessionData sessionData =
-                (AuthSessionData) session.getAttribute(SessionAttribute.AUTH_SESSION);
-        if (sessionData == null) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+    AuthSessionData sessionData =
+        (AuthSessionData) session.getAttribute(SessionAttribute.AUTH_SESSION);
+    if (sessionData == null) {
+      filterChain.doFilter(request, response);
+      return;
+    }
 
-        HttpServletRequest wrappedRequest =
-                new AuthorizationHeaderRequestWrapper(
-                        request,
-                        sessionData.accessToken()
-                );
-
-        log.debug(
-                "Injected mock Authorization header: method = {}, uri = {}",
-                request.getMethod(),
-                request.getRequestURI()
+    HttpServletRequest wrappedRequest =
+        new AuthorizationHeaderRequestWrapper(
+            request,
+            sessionData.accessToken()
         );
 
-        filterChain.doFilter(wrappedRequest, response);
-    }
+    log.debug(
+        "Injected mock Authorization header: method = {}, uri = {}",
+        request.getMethod(),
+        request.getRequestURI()
+    );
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getServletPath();
+    filterChain.doFilter(wrappedRequest, response);
+  }
 
-        return path.equals("/api/v1/auth/register")
-                || path.equals("/api/v1/auth/login")
-                || path.equals("/api/v1/auth/refresh")
-                || path.equals("/error")
-                || path.startsWith("/swagger-ui")
-                || path.startsWith("/v3/api-docs");
-    }
+  @Override
+  protected boolean shouldNotFilter(HttpServletRequest request) {
+    String path = request.getServletPath();
+
+    return path.equals("/api/v1/auth/register")
+        || path.equals("/api/v1/auth/login")
+        || path.equals("/api/v1/auth/refresh")
+        || path.equals("/error")
+        || path.startsWith("/swagger-ui")
+        || path.startsWith("/v3/api-docs");
+  }
 }

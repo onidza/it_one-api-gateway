@@ -8,20 +8,22 @@ import jakarta.validation.constraints.Size;
 
 public record LoginRequestDTO(
 
-        @Schema(
-                description = "Email пользователя",
-                example = "ivan-st233@mail.ru"
-        )
-        @NotBlank
-        @Email
-        @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
-        String email,
+    @Schema(
+        description = "Email пользователя",
+        example = "ivan-st233@mail.ru"
+    )
+    @NotBlank
+    @Email
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
+    String email,
 
-        @Schema(
-                description = "Пароль пользователя",
-                example = "Credit123"
-        )
-        @NotBlank
-        @Size(min = 8, max = 64)
-        String password
-) {}
+    @Schema(
+        description = "Пароль пользователя",
+        example = "Credit123"
+    )
+    @NotBlank
+    @Size(min = 8, max = 64)
+    String password
+) {
+
+}
