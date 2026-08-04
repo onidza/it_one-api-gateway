@@ -65,7 +65,8 @@ public class SecurityConfig {
                 "/error")
             .permitAll()
 
-            .requestMatchers(HttpMethod.POST, "/api/v1/credit").hasRole("USER")
+            .requestMatchers(HttpMethod.POST, "/api/v1/credit")
+            .hasAnyRole("USER")
 
             .requestMatchers(HttpMethod.GET,"/api/v1/credit{id}")
             .hasRole("CREDIT_MANAGER")

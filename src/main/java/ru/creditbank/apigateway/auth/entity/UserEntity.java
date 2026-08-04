@@ -56,4 +56,8 @@ public class UserEntity {
     this.middleName = middleName;
     this.role = Role.USER;
   }
+
+  public void changeRole(Role role) {
+    this.role = role;
+  }
 }

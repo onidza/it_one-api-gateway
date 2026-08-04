@@ -49,7 +49,7 @@ public class CreditApplicationController {
       @PathVariable UUID id,
       @AuthenticationPrincipal Jwt accessToken
   ) {
-    log.info("Received request for application details with id = {}", id);
+    log.info("Received request for application details with application id = {}", id);
 
     return creditServiceRestClient.get()
         .uri("/credit-service/api/v1/credit/{id}", id)
@@ -65,7 +65,7 @@ public class CreditApplicationController {
       @RequestBody @Valid StatusUpdateRequestDTO request,
       @AuthenticationPrincipal Jwt accessToken
   ) {
-    log.info("Received request for application = {}, new status = {}", id, request.status());
+    log.info("Received request for application id = {}, new status = {}", id, request.status());
 
     return creditServiceRestClient.patch()
         .uri("/credit-service/api/v1/credit/{id}/status", id)
