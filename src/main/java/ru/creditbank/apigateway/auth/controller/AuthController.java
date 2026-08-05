@@ -1,5 +1,6 @@
 package ru.creditbank.apigateway.auth.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,13 @@ public class AuthController {
         .build();
   }
 
+  @Operation(
+      description = """
+          Тестовая учётная запись c ролью CREDIT_MANAGER:
+          Email: manager@mail.ru
+          Password: Manager123
+          """
+  )
   @PostMapping("/login")
   public ResponseEntity<LoginResponseDTO> login(
       @Valid @RequestBody LoginRequestDTO request,

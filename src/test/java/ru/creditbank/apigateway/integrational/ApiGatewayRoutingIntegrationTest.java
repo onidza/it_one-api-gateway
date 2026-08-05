@@ -52,6 +52,7 @@ class ApiGatewayRoutingIntegrationTest {
           .build();
   @Autowired
   private MockMvc mockMvc;
+
   @Autowired
   private ObjectMapper objectMapper;
 

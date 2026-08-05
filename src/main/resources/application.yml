@@ -24,11 +24,11 @@ logging:
 
 security:
   jwt:
-    issuer: apigateway
+    issuer: apigateway #.env
     access-token-ttl: 30m
     secret: McHowHFh9zfPUjAu6VdpgKm+zzOTzrpNmElKZana3RM= #.env
     refresh-token-ttl: 7d
 
 rest:
   credit-service:
-    url: http://localhost:8081
+    url: http://localhost:8081 #.env

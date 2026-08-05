@@ -22,4 +22,10 @@ public class AdmissionTestController {
   public String admin() {
     return "admin access";
   }
+
+  @GetMapping("/credit-manager")
+  @PreAuthorize("hasRole('CREDIT_MANAGER')")
+  public String creditManager() {
+    return "credit manager access";
+  }
 }

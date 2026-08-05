@@ -66,12 +66,12 @@ public class SecurityConfig {
             .permitAll()
 
             .requestMatchers(HttpMethod.POST, "/api/v1/credit")
-            .hasAnyRole("USER")
+            .hasRole("USER")
 
-            .requestMatchers(HttpMethod.GET,"/api/v1/credit{id}")
+            .requestMatchers(HttpMethod.GET, "/api/v1/credit/{id}")
             .hasRole("CREDIT_MANAGER")
 
-            .requestMatchers(HttpMethod.PATCH,"/api/v1/credit{id}/status")
+            .requestMatchers(HttpMethod.PATCH, "/api/v1/credit/{id}/status")
             .hasRole("CREDIT_MANAGER")
 
             .anyRequest().authenticated()
