@@ -1,6 +1,7 @@
 package ru.creditbank.apigateway.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,15 +17,19 @@ public class CreateManagerCommand {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
+  @Value("${test.credit-manager.email}")
+  private String email;
+
+  @Value("${test.credit-manager.password}")
+  private String password;
+
   @Bean
   CommandLineRunner createCreditManager() {
     return args -> {
-      String email = "manager@mail.ru";
-
-      if (!userRepository.existsByEmail(email)) {
+      if (!userRepository.existsByEmail(this.email)) {
         UserEntity manager = new UserEntity(
-            email,
-            passwordEncoder.encode("Manager123"),
+            this.email,
+            passwordEncoder.encode(this.password),
             "Credit",
             "Manager",
             "Manager"

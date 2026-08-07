@@ -40,9 +40,8 @@ public class AuthController {
 
   @Operation(
       description = """
-          Тестовая учётная запись c ролью CREDIT_MANAGER:
-          Email: manager@mail.ru
-          Password: Manager123
+          Тестовая учётная запись c ролью CREDIT_MANAGER
+          находится в application.yml test.credit-manager"
           """
   )
   @PostMapping("/login")
@@ -59,7 +58,7 @@ public class AuthController {
 
   @PostMapping("/refresh")
   public TokenResponseDTO refresh(
-      @RequestBody RefreshTokenRequestDTO request,
+      @RequestBody @Valid RefreshTokenRequestDTO request,
       HttpServletRequest httpRequest
   ) {
     return authService.refresh(
