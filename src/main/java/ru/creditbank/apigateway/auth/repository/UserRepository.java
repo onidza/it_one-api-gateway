@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import ru.creditbank.apigateway.auth.entity.UserEntity;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
   boolean existsByEmail(String email);
 

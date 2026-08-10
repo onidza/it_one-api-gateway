@@ -1,6 +1,7 @@
 package ru.creditbank.apigateway.auth.controller;
 
 import java.util.Map;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Profile("dev")
 @RestController
 @RequestMapping("/api/v1/test")
 public class AdmissionTestController {

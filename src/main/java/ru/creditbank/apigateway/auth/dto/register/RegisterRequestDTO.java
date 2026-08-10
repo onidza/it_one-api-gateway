@@ -11,22 +11,38 @@ import jakarta.validation.constraints.Size;
 
 public record RegisterRequestDTO(
 
-    @Schema(description = "Email пользователя", example = "ivan-st233@mail.ru")
+    @Schema(
+        description = "Email пользователя",
+        example = "ivan-st233@mail.ru"
+    )
     @JsonProperty("email")
-    @NotBlank
-    @Email
-    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
+    @Pattern(
+        regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+        message = "Invalid email format"
+    )
     String email,
 
     @JsonProperty("fullname")
-    @NotNull
+    @NotNull(message = "Full name is required")
     @Valid
     FullNameDTO fullName,
 
-    @Schema(description = "Пароль пользователя", example = "Credit123")
-    @NotBlank
-    @Size(min = 8, max = 64)
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$")
+    @Schema(
+        description = "Пароль пользователя",
+        example = "Credit123"
+    )
+    @NotBlank(message = "Password is required")
+    @Size(
+        min = 8,
+        max = 64,
+        message = "Password must be between 8 and 64 characters"
+    )
+    @Pattern(
+        regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$",
+        message = "Password must contain uppercase, lowercase letters and a digit"
+    )
     String password
 ) {
 

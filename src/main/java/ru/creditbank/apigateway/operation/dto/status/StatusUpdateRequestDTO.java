@@ -10,23 +10,40 @@ import java.math.BigDecimal;
 
 public record StatusUpdateRequestDTO(
 
-    @Schema(description = "Новый статус заявки", example = "APPROVED")
-    @NotNull
+    @Schema(
+        description = "Новый статус заявки",
+        example = "APPROVED"
+    )
+    @NotNull(message = "Status is required")
     UpdateStatusDTO status,
 
     @Schema(
         description = "Комментарий менеджера (необязательно)",
-        example = "Заявка одобрена, сумма кредита появится на счёте в течении часа")
-    @Size(max = 500)
+        example = "Заявка одобрена, сумма кредита появится на счёте в течении часа"
+    )
+    @Size(
+        max = 500,
+        message = "Manager comment must not exceed 500 characters"
+    )
     String managerComment,
 
     @Schema(
         description = "Назначенная процентная ставка",
         example = "12.3"
     )
-    @DecimalMin(value = "0.01")
-    @DecimalMax(value = "100.00")
-    @Digits(integer = 3, fraction = 2)
+    @DecimalMin(
+        value = "0.01",
+        message = "Interest rate must be at least 0.01"
+    )
+    @DecimalMax(
+        value = "100.00",
+        message = "Interest rate must not exceed 100.00"
+    )
+    @Digits(
+        integer = 3,
+        fraction = 2,
+        message = "Interest rate must have up to 3 integer digits and 2 decimal places"
+    )
     BigDecimal interestRate
 ) {
 
