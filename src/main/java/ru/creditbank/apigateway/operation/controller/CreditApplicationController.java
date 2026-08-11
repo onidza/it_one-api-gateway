@@ -23,12 +23,12 @@ import ru.creditbank.apigateway.operation.dto.status.StatusUpdateRequestDTO;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/credit-service/api/v1/credit")
 public class CreditApplicationController {
 
   private final RestClient creditServiceRestClient;
 
-  @PostMapping("/credit")
+  @PostMapping
   public ResponseEntity<CreditApplicationResponseDTO> createApplication(
       @Valid @RequestBody CreditApplicationRequestDTO request,
       @AuthenticationPrincipal Jwt accessToken
@@ -44,7 +44,7 @@ public class CreditApplicationController {
         .toEntity(CreditApplicationResponseDTO.class);
   }
 
-  @GetMapping("/credit/{id}")
+  @GetMapping("/{id}")
   public ResponseEntity<CreditApplicationDetailsDTO> getApplicationDetails(
       @PathVariable UUID id,
       @AuthenticationPrincipal Jwt accessToken
@@ -59,7 +59,7 @@ public class CreditApplicationController {
         .toEntity(CreditApplicationDetailsDTO.class);
   }
 
-  @PatchMapping("/credit/{id}/status")
+  @PatchMapping("/{id}/status")
   public ResponseEntity<Void> changeApplicationStatus(
       @PathVariable UUID id,
       @RequestBody @Valid StatusUpdateRequestDTO request,
