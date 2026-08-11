@@ -1,5 +1,13 @@
 package ru.creditbank.apigateway.operation.dto.payment;
 
-public record PaymentResponseDTO() {
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.UUID;
+
+public record PaymentResponseDTO(
+    UUID paymentId,
+    BigDecimal newBalance,
+    LocalDate nextPaymentDate
+) {
 
 }

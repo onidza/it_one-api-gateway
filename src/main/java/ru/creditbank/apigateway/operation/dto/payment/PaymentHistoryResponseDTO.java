@@ -1,5 +1,9 @@
 package ru.creditbank.apigateway.operation.dto.payment;
 
-public record PaymentHistoryResponseDTO() {
+import java.util.List;
+
+public record PaymentHistoryResponseDTO(
+    List<PaymentHistoryItemDTO> payments
+) {
 
 }

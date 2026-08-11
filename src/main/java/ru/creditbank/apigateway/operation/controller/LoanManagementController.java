@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
-import ru.creditbank.apigateway.operation.dto.loanInfo.UserLoansResponseDTO;
+import ru.creditbank.apigateway.operation.dto.loan.UserLoansResponseDTO;
 import ru.creditbank.apigateway.operation.dto.payment.CreatePaymentRequestDTO;
 import ru.creditbank.apigateway.operation.dto.payment.PaymentHistoryResponseDTO;
 import ru.creditbank.apigateway.operation.dto.payment.PaymentResponseDTO;
@@ -46,7 +46,12 @@ public class LoanManagementController {
       @Valid @RequestBody CreatePaymentRequestDTO request,
       @AuthenticationPrincipal Jwt accessToken
   ) {
-    log.info("Received create payment request, ???");
+    log.info(
+        "Received create payment request, loanId = {}, amount = {}, paymentType = {}",
+        request.loanId(),
+        request.amount(),
+        request.paymentType()
+    );
 
     return loanServiceRestClient.post()
         .uri("/loan-management-service/api/v1/payment")
@@ -59,13 +64,20 @@ public class LoanManagementController {
 
   @GetMapping("/history")
   public ResponseEntity<PaymentHistoryResponseDTO> getPaymentHistory(
-      @RequestParam UUID id,
+      @RequestParam("loanId") UUID loanId,
       @AuthenticationPrincipal Jwt accessToken
   ) {
-    log.info("Received payment history request, ???");
+    log.info(
+        "Received payment history request, loanId = {}",
+        loanId
+    );
 
     return loanServiceRestClient.get()
-        .uri("/loan-management-service/api/v1/payment/history")
+        .uri(uriBuilder -> uriBuilder
+            .path("/loan-management-service/api/v1/payment/history")
+            .queryParam("loan_id", loanId)
+            .build()
+        )
         .headers(headers ->
             headers.setBearerAuth(accessToken.getTokenValue()))
         .retrieve()
