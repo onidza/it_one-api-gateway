@@ -41,7 +41,7 @@ public class LoanManagementController {
         .toEntity(UserLoansResponseDTO.class);
   }
 
-  @PostMapping("/payment")
+  @PostMapping
   public ResponseEntity<PaymentResponseDTO> createPayment(
       @Valid @RequestBody CreatePaymentRequestDTO request,
       @AuthenticationPrincipal Jwt accessToken
@@ -75,7 +75,7 @@ public class LoanManagementController {
     return loanServiceRestClient.get()
         .uri(uriBuilder -> uriBuilder
             .path("/loan-management-service/api/v1/payment/history")
-            .queryParam("loan_id", loanId)
+            .queryParam("loanId", loanId)
             .build()
         )
         .headers(headers ->
