@@ -1,4 +1,4 @@
-package ru.creditbank.apigateway.auth.exception;
+package ru.creditbank.apigateway.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
