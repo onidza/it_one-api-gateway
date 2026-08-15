@@ -92,19 +92,46 @@ public class GlobalExceptionHandler {
       RestClientResponseException ex,
       HttpServletRequest request
   ) {
-    log.warn("Business exception: {} - {}",
-        ex.getClass().getSimpleName(),
-        ex.getMessage());
-
     HttpStatusCode status = ex.getStatusCode();
+
+    ErrorResponseDTO downstreamError;
+
+    try {
+      downstreamError =
+          ex.getResponseBodyAs(ErrorResponseDTO.class);
+    } catch (Exception e) {
+      downstreamError = null;
+    }
+
+    String error;
+    String message;
+
+    if (downstreamError != null) {
+      error = downstreamError.error();
+      message = downstreamError.message();
+    } else {
+      HttpStatus httpStatus =
+          HttpStatus.resolve(status.value());
+
+      error = httpStatus != null
+          ? httpStatus.getReasonPhrase()
+          : "Downstream Error";
+
+      message = "Downstream service request failed";
+    }
+
+    log.warn(
+        "Downstream request failed: status = {}, error = {}, message = {}",
+        status.value(),
+        error,
+        message
+    );
 
     ErrorResponseDTO response = new ErrorResponseDTO(
         LocalDateTime.now(),
         status.value(),
-        HttpStatus.resolve(status.value()) != null
-            ? HttpStatus.resolve(status.value()).getReasonPhrase()
-            : "Downstream Error",
-        "Downstream service request failed",
+        error,
+        message,
         request.getRequestURI()
     );
 
