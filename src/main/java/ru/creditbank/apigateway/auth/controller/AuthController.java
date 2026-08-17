@@ -1,5 +1,6 @@
 package ru.creditbank.apigateway.auth.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,40 +24,46 @@ import ru.creditbank.apigateway.auth.service.AuthService;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
-    private final AuthService authService;
+  private final AuthService authService;
 
-    @PostMapping("/register")
-    public ResponseEntity<Void> register(
-            @Valid @RequestBody RegisterRequestDTO request
-    ) {
-        log.info("Received registration request for email = {}", request.email());
-        authService.register(request);
+  @PostMapping("/register")
+  public ResponseEntity<Void> register(
+      @Valid @RequestBody RegisterRequestDTO request
+  ) {
+    log.info("Received registration request for email = {}", request.email());
+    authService.register(request);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .build();
-    }
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .build();
+  }
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(
-            @Valid @RequestBody LoginRequestDTO request,
-            HttpServletRequest httpRequest
-    ) {
-        log.info("Received login request for email = {}", request.email());
+  @Operation(
+      description = """
+          Тестовая учётная запись c ролью CREDIT_MANAGER
+          находится в application.yml test.credit-manager"
+          """
+  )
+  @PostMapping("/login")
+  public ResponseEntity<LoginResponseDTO> login(
+      @Valid @RequestBody LoginRequestDTO request,
+      HttpServletRequest httpRequest
+  ) {
+    log.info("Received login request for email = {}", request.email());
 
-        return ResponseEntity.ok(
-                authService.login(request, httpRequest)
-        );
-    }
+    return ResponseEntity.ok(
+        authService.login(request, httpRequest)
+    );
+  }
 
-    @PostMapping("/refresh")
-    public TokenResponseDTO refresh(
-            @RequestBody RefreshTokenRequestDTO request,
-            HttpServletRequest httpRequest
-    ) {
-        return authService.refresh(
-                request.refreshToken(),
-                httpRequest
-        );
-    }
+  @PostMapping("/refresh")
+  public TokenResponseDTO refresh(
+      @RequestBody @Valid RefreshTokenRequestDTO request,
+      HttpServletRequest httpRequest
+  ) {
+    return authService.refresh(
+        request.refreshToken(),
+        httpRequest
+    );
+  }
 }

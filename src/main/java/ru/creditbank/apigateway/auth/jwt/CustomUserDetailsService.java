@@ -1,4 +1,4 @@
-package ru.creditbank.apigateway.jwt;
+package ru.creditbank.apigateway.auth.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
@@ -13,19 +13,19 @@ import ru.creditbank.apigateway.auth.repository.UserRepository;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String email) {
-        UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("Invalid email or password")
-                );
+  @Override
+  public UserDetails loadUserByUsername(String email) {
+    UserEntity user = userRepository.findByEmail(email)
+        .orElseThrow(() ->
+            new UsernameNotFoundException("Invalid email or password")
+        );
 
-        return User.builder()
-                .username(user.getEmail())
-                .password(user.getPasswordHash())
-                .roles(user.getRole().name())
-                .build();
-    }
+    return User.builder()
+        .username(user.getEmail())
+        .password(user.getPasswordHash())
+        .roles(user.getRole().name())
+        .build();
+  }
 }

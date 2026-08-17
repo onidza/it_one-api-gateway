@@ -1,6 +1,13 @@
 package ru.creditbank.apigateway.auth.dto.error;
 
+import java.time.LocalDateTime;
+
 public record ErrorResponseDTO(
-        int status,
-        String message
-) {}
+    LocalDateTime timestamp,
+    int status,
+    String error,
+    String message,
+    String path
+) {
+
+}

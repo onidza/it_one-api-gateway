@@ -2,10 +2,13 @@ spring:
   application:
     name: apigateway
 
+  profiles:
+    active: dev
+
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres #.env
-    password: postgres #.env
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
 
   jpa:
     hibernate:
@@ -24,11 +27,18 @@ logging:
 
 security:
   jwt:
-    issuer: apigateway
+    issuer: ${SECURITY_JWT_ISSUER:apigateway}
     access-token-ttl: 30m
-    secret: McHowHFh9zfPUjAu6VdpgKm+zzOTzrpNmElKZana3RM= #.env
+    secret: ${SECURITY_JWT_SECRET:McHowHFh9zfPUjAu6VdpgKm+zzOTzrpNmElKZana3RM=}
     refresh-token-ttl: 7d
 
 rest:
   credit-service:
-    url: http://localhost:8081/credit-service
+    url: ${REST_CREDIT_SERVICE_URL:http://localhost:8081}
+    connect-timeout: 1s
+    read-timeout: 3s
+
+test:
+  credit-manager:
+    email: ${TEST_CREDIT_MANAGER_EMAIL:manager@mail.ru}
+    password: ${TEST_CREDIT_MANAGER_PASSWORD:Manager123}

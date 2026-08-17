@@ -16,7 +16,7 @@ paths:
       summary: Подача кредитной заявки
       description: Создание новой кредитной заявки с указанными параметрами
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       requestBody:
         required: true
         content:
@@ -79,7 +79,7 @@ components:
           description: Уникальный идентификатор заявки
         status:
           type: string
-          enum: ["PENDING", "APPROVED", "REJECTED"]
+          enum: [ "PENDING", "APPROVED", "REJECTED" ]
           example: "PENDING"
           description: Статус заявки
         createdAt:

@@ -5,17 +5,18 @@ import java.time.Instant;
 import java.util.UUID;
 
 public record AuthSessionData(
-        UUID userId,
-        String accessToken,
-        String refreshToken,
-        Instant refreshTokenExpiresAt
+    UUID userId,
+    String accessToken,
+    String refreshToken,
+    Instant refreshTokenExpiresAt
 ) implements Serializable {
-    public AuthSessionData withAccessToken(String newAccessToken) {
-        return new AuthSessionData(
-                userId,
-                newAccessToken,
-                refreshToken,
-                refreshTokenExpiresAt
-        );
-    }
+
+  public AuthSessionData withAccessToken(String newAccessToken) {
+    return new AuthSessionData(
+        userId,
+        newAccessToken,
+        refreshToken,
+        refreshTokenExpiresAt
+    );
+  }
 }
