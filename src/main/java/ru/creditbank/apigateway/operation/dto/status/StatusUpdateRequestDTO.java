@@ -12,7 +12,7 @@ public record StatusUpdateRequestDTO(
 
     @Schema(
         description = "Новый статус заявки",
-        example = "APPROVED"
+        example = "APPROVING"
     )
     @NotNull(message = "Status is required")
     UpdateStatusDTO status,
