@@ -1,6 +1,7 @@
 package ru.creditbank.apigateway.config;
 
 import java.time.Duration;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.http.client.ClientHttpRequestFactoryBuilder;
 import org.springframework.boot.http.client.ClientHttpRequestFactorySettings;
@@ -31,7 +32,7 @@ public class RestClientConfig {
   private Duration loanServiceReadTimeout;
 
   @Bean
-  public RestClient creditServiceRestClient() {
+  public RestClient creditServiceRestClient(RestClient.Builder builder) {
     ClientHttpRequestFactorySettings settings =
         ClientHttpRequestFactorySettings.defaults()
             .withTimeouts(
@@ -44,14 +45,14 @@ public class RestClientConfig {
             .detect()
             .build(settings);
 
-    return RestClient.builder()
+    return builder
         .baseUrl(creditServiceUrl)
         .requestFactory(requestFactory)
         .build();
   }
 
   @Bean
-  public RestClient loanServiceRestClient() {
+  public RestClient loanServiceRestClient(RestClient.Builder builder) {
     ClientHttpRequestFactorySettings settings =
         ClientHttpRequestFactorySettings.defaults()
             .withTimeouts(
@@ -64,9 +65,25 @@ public class RestClientConfig {
             .detect()
             .build(settings);
 
-    return RestClient.builder()
+    return builder
         .baseUrl(loanServiceUrl)
         .requestFactory(requestFactory)
         .build();
+  }
+
+  @Bean
+  public RestClient.Builder restClientBuilder() {
+    return RestClient.builder()
+        .requestInterceptor((request, body, execution) -> {
+
+          String traceId = MDC.get("traceId");
+
+          if (traceId != null) {
+            request.getHeaders()
+                .set("X-Trace-Id", traceId);
+          }
+
+          return execution.execute(request, body);
+        });
   }
 }
