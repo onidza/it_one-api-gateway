@@ -65,14 +65,23 @@ public class SecurityConfig {
                 "/error")
             .permitAll()
 
-            .requestMatchers(HttpMethod.POST, "/api/v1/credit")
+            .requestMatchers(HttpMethod.POST, "/credit-service/api/v1/credit")
             .hasRole("USER")
 
-            .requestMatchers(HttpMethod.GET, "/api/v1/credit/{id}")
+            .requestMatchers(HttpMethod.GET, "/credit-service/api/v1/credit/{id}")
             .hasRole("CREDIT_MANAGER")
 
-            .requestMatchers(HttpMethod.PATCH, "/api/v1/credit/{id}/status")
+            .requestMatchers(HttpMethod.PATCH, "/credit-service/api/v1/credit/{id}/status")
             .hasRole("CREDIT_MANAGER")
+
+            .requestMatchers(HttpMethod.GET,
+                "/loan-management-service/api/v1/payment/loans",
+                "/loan-management-service/api/v1/payment/history"
+            )
+            .hasRole("USER")
+
+            .requestMatchers(HttpMethod.POST, "/loan-management-service/api/v1/payment")
+            .hasRole("USER")
 
             .anyRequest().authenticated()
         )
