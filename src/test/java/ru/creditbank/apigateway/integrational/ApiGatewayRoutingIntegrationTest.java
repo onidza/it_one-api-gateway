@@ -36,7 +36,7 @@ import ru.creditbank.apigateway.operation.dto.application.CreditApplicationReque
 class ApiGatewayRoutingIntegrationTest {
 
   private static final String GATEWAY_PATH =
-      "/api/v1/credit";
+      "/credit-service/api/v1/credit";
 
   private static final String CREDIT_SERVICE_PATH =
       "/credit-service/api/v1/credit";

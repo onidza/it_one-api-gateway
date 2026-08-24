@@ -1,4 +1,4 @@
-package ru.creditbank.apigateway.auth.exception;
+package ru.creditbank.apigateway.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

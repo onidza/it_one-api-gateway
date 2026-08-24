@@ -37,6 +37,10 @@ rest:
     url: ${REST_CREDIT_SERVICE_URL:http://localhost:8081}
     connect-timeout: 1s
     read-timeout: 3s
+  loan-service:
+    url: ${REST_LOAN_SERVICE_URL:http://localhost:8082}
+    connect-timeout: 1s
+    read-timeout: 3s
 
 test:
   credit-manager:

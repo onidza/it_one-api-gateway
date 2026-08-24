@@ -6,9 +6,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.creditbank.apigateway.auth.dto.session.AuthSessionData;
@@ -40,9 +42,11 @@ public class JwtHeaderInjectionFilter extends OncePerRequestFilter {
       return;
     }
 
-    AuthSessionData sessionData =
-        (AuthSessionData) session.getAttribute(SessionAttribute.AUTH_SESSION);
-    if (sessionData == null) {
+    Object attribute = session.getAttribute(SessionAttribute.AUTH_SESSION);
+    if (!(attribute instanceof AuthSessionData sessionData)) {
+      log.warn("Invalid auth session");
+      session.invalidate();
+
       filterChain.doFilter(request, response);
       return;
     }
