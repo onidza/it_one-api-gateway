@@ -83,6 +83,8 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/loan-management-service/api/v1/payment")
             .hasRole("USER")
 
+            .requestMatchers("/actuator/health").permitAll()
+
             .anyRequest().authenticated()
         )
         .sessionManagement(session -> session

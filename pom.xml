@@ -2,25 +2,60 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-
-  <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.5.16</version>
-    <relativePath/>
-  </parent>
-
-  <groupId>ru.creditbank</groupId>
   <artifactId>apigateway</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
 
-  <name>apigateway</name>
-  <description>API Gateway and authentication service</description>
-
-  <properties>
-    <java.version>17</java.version>
-  </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>
+              <artifactId>lombok</artifactId>
+              <groupId>org.projectlombok</groupId>
+            </exclude>
+          </excludes>
+        </configuration>
+        <groupId>org.springframework.boot</groupId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <executions>
+          <execution>
+            <configuration>
+              <annotationProcessorPaths>
+                <path>
+                  <artifactId>lombok</artifactId>
+                  <groupId>org.projectlombok</groupId>
+                </path>
+              </annotationProcessorPaths>
+            </configuration>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <id>default-compile</id>
+            <phase>compile</phase>
+          </execution>
+          <execution>
+            <configuration>
+              <annotationProcessorPaths>
+                <path>
+                  <artifactId>lombok</artifactId>
+                  <groupId>org.projectlombok</groupId>
+                </path>
+              </annotationProcessorPaths>
+            </configuration>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+            <id>default-testCompile</id>
+            <phase>test-compile</phase>
+          </execution>
+        </executions>
+        <groupId>org.apache.maven.plugins</groupId>
+      </plugin>
+    </plugins>
+  </build>
 
   <dependencies>
     <dependency>
@@ -96,63 +131,32 @@
       <version>3.13.2</version>
     </dependency>
     <dependency>
-      <groupId>net.logstash.logback</groupId>
       <artifactId>logstash-logback-encoder</artifactId>
+      <groupId>net.logstash.logback</groupId>
       <version>8.1</version>
     </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
   </dependencies>
+  <description>API Gateway and authentication service</description>
+  <groupId>ru.creditbank</groupId>
 
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>
-              <artifactId>lombok</artifactId>
-              <groupId>org.projectlombok</groupId>
-            </exclude>
-          </excludes>
-        </configuration>
-        <groupId>org.springframework.boot</groupId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <executions>
-          <execution>
-            <configuration>
-              <annotationProcessorPaths>
-                <path>
-                  <artifactId>lombok</artifactId>
-                  <groupId>org.projectlombok</groupId>
-                </path>
-              </annotationProcessorPaths>
-            </configuration>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <id>default-compile</id>
-            <phase>compile</phase>
-          </execution>
-          <execution>
-            <configuration>
-              <annotationProcessorPaths>
-                <path>
-                  <artifactId>lombok</artifactId>
-                  <groupId>org.projectlombok</groupId>
-                </path>
-              </annotationProcessorPaths>
-            </configuration>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
-            <id>default-testCompile</id>
-            <phase>test-compile</phase>
-          </execution>
-        </executions>
-        <groupId>org.apache.maven.plugins</groupId>
-      </plugin>
-    </plugins>
-  </build>
+  <modelVersion>4.0.0</modelVersion>
+  <name>apigateway</name>
+
+  <parent>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <groupId>org.springframework.boot</groupId>
+    <relativePath/>
+    <version>3.5.16</version>
+  </parent>
+
+  <properties>
+    <java.version>17</java.version>
+  </properties>
+
+  <version>0.0.1-SNAPSHOT</version>
 
 </project>

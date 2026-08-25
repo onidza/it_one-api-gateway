@@ -2,9 +2,6 @@ spring:
   application:
     name: apigateway
 
-  profiles:
-    active: dev
-
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
