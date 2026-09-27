@@ -56,10 +56,7 @@ public class AuthService {
       LoginRequestDTO request,
       HttpServletRequest httpRequest
   ) {
-    log.info(
-        "Try to login with email = {}",
-        request.email()
-    );
+    log.info("Login attempt");
 
     authenticationManager.authenticate(
         UsernamePasswordAuthenticationToken.unauthenticated(
@@ -67,6 +64,8 @@ public class AuthService {
             request.password()
         )
     );
+
+    log.info("Login successful");
 
     UserEntity user = userRepository.findByEmail(request.email())
         .orElseThrow(() ->
