@@ -52,7 +52,9 @@ public class AuthService {
   }
 
   /**
-   * Creating an access JWT token and refresh token and store it in {@link HttpSession} as attribute.
+   * Creating an access JWT token and refresh token and store it in {@link HttpSession} as
+   * attribute.
+   *
    * @return an access and refresh tokens
    * @throws BadCredentialsException if user credentials are invalid
    */
@@ -61,10 +63,7 @@ public class AuthService {
       LoginRequestDTO request,
       HttpServletRequest httpRequest
   ) {
-    log.info(
-        "Try to login with email = {}",
-        request.email()
-    );
+    log.info("Login attempt");
 
     authenticationManager.authenticate(
         UsernamePasswordAuthenticationToken.unauthenticated(
@@ -72,6 +71,8 @@ public class AuthService {
             request.password()
         )
     );
+
+    log.info("Login successful");
 
     UserEntity user = userRepository.findByEmail(request.email())
         .orElseThrow(() ->
