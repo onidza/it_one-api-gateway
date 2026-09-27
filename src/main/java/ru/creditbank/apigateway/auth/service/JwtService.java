@@ -25,6 +25,13 @@ public class JwtService {
   private final JwtProperties jwtProperties;
   private final SecureRandom secureRandom = new SecureRandom();
 
+  /**
+   * Generate JWT token using {@code MacAlgorithm.HS256} algorithm.
+   * @param userId user id as UUID type
+   * @param subject user email
+   * @param role user role included as authority
+   * @return JWT access token as string
+   */
   public String generateAccessToken(
       UUID userId,
       String subject,

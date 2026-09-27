@@ -12,6 +12,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * Filter generate and set header {@code X-Trace-Id} for {@link HttpServletRequest}.
+ * Also generate span id and put it with service name into {@code MDC} context.
+ *
+ * @see FilterConfig registration details
+ */
 @Component
 @RequiredArgsConstructor
 public class TraceFilter extends OncePerRequestFilter {

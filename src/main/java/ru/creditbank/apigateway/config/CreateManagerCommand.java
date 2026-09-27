@@ -10,6 +10,9 @@ import ru.creditbank.apigateway.auth.entity.Role;
 import ru.creditbank.apigateway.auth.entity.UserEntity;
 import ru.creditbank.apigateway.auth.repository.UserRepository;
 
+/**
+ * Generate test access data for role {@code CREDIT_MANAGER} before start application.
+ */
 @Configuration
 @RequiredArgsConstructor
 public class CreateManagerCommand {
@@ -23,6 +26,9 @@ public class CreateManagerCommand {
   @Value("${test.credit-manager.password}")
   private String password;
 
+  /**
+   * Used mock first, middle, last name
+   */
   @Bean
   CommandLineRunner createCreditManager() {
     return args -> {

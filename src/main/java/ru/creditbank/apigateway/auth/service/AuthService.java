@@ -51,6 +51,11 @@ public class AuthService {
     log.info("New user was registered = {}", request.email());
   }
 
+  /**
+   * Creating an access JWT token and refresh token and store it in {@link HttpSession} as attribute.
+   * @return an access and refresh tokens
+   * @throws BadCredentialsException if user credentials are invalid
+   */
   @Transactional(readOnly = true, rollbackFor = Exception.class)
   public LoginResponseDTO login(
       LoginRequestDTO request,
@@ -187,6 +192,7 @@ public class AuthService {
       return request.getSession(true);
     }
 
+    //change session id for prevent session fixation attack
     request.changeSessionId();
 
     return session;

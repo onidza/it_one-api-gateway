@@ -9,12 +9,18 @@ import org.springframework.stereotype.Service;
 import ru.creditbank.apigateway.auth.entity.UserEntity;
 import ru.creditbank.apigateway.auth.repository.UserRepository;
 
+/**
+ * Detail service config for correct Spring security user details provider working.
+ */
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
   private final UserRepository userRepository;
 
+  /**
+   * @param email the username identifying the user whose data is required.
+   */
   @Override
   public UserDetails loadUserByUsername(String email) {
     UserEntity user = userRepository.findByEmail(email)

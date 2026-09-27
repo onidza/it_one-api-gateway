@@ -1,5 +1,6 @@
 package ru.creditbank.apigateway.config;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import ru.creditbank.apigateway.auth.dto.login.LoginRequestDTO;
 import ru.creditbank.apigateway.auth.jwt.JwtHeaderInjectionFilter;
 
 @Configuration
@@ -28,11 +30,19 @@ public class SecurityConfig {
   private final JwtAuthenticationConverter jwtAuthenticationConverter;
   private final JwtHeaderInjectionFilter jwtHeaderInjectionFilter;
 
+  /**
+   * @return {@link BCryptPasswordEncoder} password encoder for {@link AuthenticationManager}
+   */
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
 
+  /**
+   * Authentication provider for basic auth.
+   * @see ru.creditbank.apigateway.auth.service.AuthService#login(LoginRequestDTO, HttpServletRequest)
+   * @return provider manager for basic auth
+   */
   @Bean
   public AuthenticationManager authenticationManager(
       UserDetailsService userDetailsService,

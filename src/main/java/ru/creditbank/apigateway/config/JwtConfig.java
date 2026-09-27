@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import java.util.Base64;
+import java.util.UUID;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import ru.creditbank.apigateway.auth.entity.Role;
 import ru.creditbank.apigateway.config.property.JwtProperties;
 
 @Configuration
@@ -64,6 +66,11 @@ public class JwtConfig {
     return decoder;
   }
 
+  /**
+   * Converter for change default {@code scope} -> {@code authorities} without {@code prefix}
+   * cuz we are using custom claims
+   * @see ru.creditbank.apigateway.auth.service.JwtService#generateAccessToken(UUID, String, Role)
+   */
   @Bean
   public JwtAuthenticationConverter jwtAuthenticationConverter() {
     JwtGrantedAuthoritiesConverter converter =

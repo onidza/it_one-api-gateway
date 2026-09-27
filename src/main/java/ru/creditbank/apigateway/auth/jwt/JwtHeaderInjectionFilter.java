@@ -16,6 +16,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import ru.creditbank.apigateway.auth.dto.session.AuthSessionData;
 import ru.creditbank.apigateway.auth.dto.session.SessionAttribute;
 
+/**
+ * {@link OncePerRequestFilter} injecting an access JWT token
+ * in each {@link HttpServletRequest} except request matched by
+ * {@link #shouldNotFilter(HttpServletRequest)}
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -66,6 +71,9 @@ public class JwtHeaderInjectionFilter extends OncePerRequestFilter {
     filterChain.doFilter(wrappedRequest, response);
   }
 
+  /**
+   * We are not apply a filter for these uri.
+   */
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
     String path = request.getServletPath();

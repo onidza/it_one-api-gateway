@@ -9,6 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Test controller for verifying Spring Security authentication and authorization.
+ *
+ * <p>Provides endpoints for checking claims and permissions via
+ * {@link AuthenticationPrincipal} and roles {@code ADMIN} and {@code CREDIT_MANAGER}
+ *
+ * <p>Available only with profile {@code dev} enabled.
+ */
 @Profile("dev")
 @RestController
 @RequestMapping("/api/v1/test")

@@ -10,6 +10,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
+/**
+ * Rest client config for {@code credit service} and for {@code loan service}.
+ */
+
 @Configuration
 public class RestClientConfig {
 
@@ -71,6 +75,10 @@ public class RestClientConfig {
         .build();
   }
 
+  /**
+   * Injecting {@code X-Trace-Id} header in rest clients.
+   * @return RestClient.Builder for general rest configs
+   */
   @Bean
   public RestClient.Builder restClientBuilder() {
     return RestClient.builder()

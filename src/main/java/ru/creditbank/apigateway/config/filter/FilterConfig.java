@@ -5,6 +5,9 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Register filter {@link TraceFilter} for each url pattern {@code /*} and order {@code №1}
+ */
 @Configuration
 @RequiredArgsConstructor
 public class FilterConfig {

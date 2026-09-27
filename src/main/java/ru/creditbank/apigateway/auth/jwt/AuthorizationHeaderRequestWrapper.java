@@ -9,6 +9,12 @@ import java.util.List;
 import java.util.Set;
 import org.springframework.http.HttpHeaders;
 
+/**
+ * Wrapper for inject bearer access token header for each http request,
+ * cus {@link HttpServletRequest} is immutable.
+ *
+ * @see JwtHeaderInjectionFilter
+ */
 public class AuthorizationHeaderRequestWrapper extends HttpServletRequestWrapper {
 
   private final String authorizationHeader;

@@ -18,6 +18,12 @@ import ru.creditbank.apigateway.auth.dto.token.RefreshTokenRequestDTO;
 import ru.creditbank.apigateway.auth.dto.token.TokenResponseDTO;
 import ru.creditbank.apigateway.auth.service.AuthService;
 
+/**
+ * Main controller for authentication and authorization user flow.
+ *
+ * <p>Provides endpoints for register, login and refresh access Jwt token.
+ * Firstly register, then login with same data.
+ */
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -40,8 +46,7 @@ public class AuthController {
 
   @Operation(
       description = """
-          Тестовая учётная запись c ролью CREDIT_MANAGER
-          находится в application.yml test.credit-manager"
+          There are test data account stored in application.yml with path: test.credit-manager"
           """
   )
   @PostMapping("/login")
