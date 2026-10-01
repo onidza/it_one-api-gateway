@@ -54,7 +54,7 @@ public class AuthController {
       @Valid @RequestBody LoginRequestDTO request,
       HttpServletRequest httpRequest
   ) {
-    log.info("Received login request for email = {}", request.email());
+    log.debug("Received login request");
 
     return ResponseEntity.ok(
         authService.login(request, httpRequest)

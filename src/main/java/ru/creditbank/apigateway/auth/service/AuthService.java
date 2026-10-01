@@ -41,14 +41,14 @@ public class AuthService {
     }
 
     String passwordHash = passwordEncoder.encode(request.password());
-    userRepository.save(new UserEntity(
+    UserEntity user = userRepository.save(new UserEntity(
         request.email(),
         passwordHash,
         request.fullName().firstName(),
         request.fullName().lastName(),
         request.fullName().middleName()
     ));
-    log.info("New user was registered = {}", request.email());
+    log.info("New user was registered = {}", user.getId());
   }
 
   /**
@@ -107,11 +107,7 @@ public class AuthService {
         sessionData
     );
 
-    log.info(
-        "User successfully logged in, userId = {}, sessionId = {}",
-        user.getId(),
-        session.getId()
-    );
+    log.info("User successfully logged in, userId = {}", user.getId());
 
     return new LoginResponseDTO(
         accessToken,

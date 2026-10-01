@@ -30,10 +30,10 @@ import ru.creditbank.apigateway.config.TestcontainersConfiguration;
 class ApiGatewayStatusIntegrationalTest {
 
   private static final String GATEWAY_DETAILS_PATH =
-      "/api/v1/credit/{id}";
+      "/credit-service/api/v1/credit/{id}";
 
   private static final String GATEWAY_STATUS_PATH =
-      "/api/v1/credit/{id}/status";
+      "/credit-service/api/v1/credit/{id}/status";
 
   @RegisterExtension
   static WireMockExtension creditServiceMock =

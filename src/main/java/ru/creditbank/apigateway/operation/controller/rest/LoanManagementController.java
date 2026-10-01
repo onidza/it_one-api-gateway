@@ -1,4 +1,4 @@
-package ru.creditbank.apigateway.operation.controller;
+package ru.creditbank.apigateway.operation.controller.rest;
 
 import jakarta.validation.Valid;
 import java.util.UUID;

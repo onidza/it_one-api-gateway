@@ -2,6 +2,9 @@ spring:
   application:
     name: apigateway
 
+  profiles:
+    default: dev
+
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
@@ -17,6 +20,14 @@ spring:
         default_batch_fetch_size: 20
         jdbc:
           batch_size: 50
+
+  grpc:
+    client:
+      channels:
+        credit-service:
+          address: localhost:9091
+          default-deadline:
+            seconds: 5
 
 logging:
   level:
