@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package credit.v1;
+
+option java_package = "ru.creditbank.contract.credit.v1";
+option java_multiple_files = true;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+service CreditService {
+  rpc CreateApplication(CreditApplicationRequest)
+    returns (CreditApplicationResponse);
+
+  rpc GetApplicationDetails(CreditApplicationDetailsRequest)
+    returns (CreditApplicationDetailsResponse);
+
+  rpc ChangeApplicationStatus(StatusUpdateRequest)
+    returns (google.protobuf.Empty);
+}
+
+message CreditApplicationRequest {
+  string full_name = 1;
+  string requested_amount = 2;
+  int32 term_months = 3;
+}
+
+message CreditApplicationResponse {
+  string id = 1;
+  CreditStatus status = 2;
+  google.protobuf.Timestamp created_at = 3;
+}
+
+enum CreditStatus {
+  CREDIT_STATUS_UNSPECIFIED = 0;
+  CREDIT_STATUS_PENDING = 1;
+  CREDIT_STATUS_APPROVING = 2;
+  CREDIT_STATUS_APPROVED = 3;
+  CREDIT_STATUS_REJECTED = 4;
+}
+
+message CreditApplicationDetailsRequest {
+  string id = 1;
+}
+
+message CreditApplicationDetailsResponse {
+  string id = 1;
+  UserInfo user_info = 2;
+  LoanDetails loan_details = 3;
+  CreditStatus status = 4;
+  google.protobuf.Timestamp created_at = 5;
+
+}
+
+message UserInfo {
+  string user_id = 1;
+  string full_name = 2;
+  string email = 3;
+}
+
+message LoanDetails {
+  string requested_amount = 1;
+  int32 term_months = 2;
+  optional string interest_rate = 3;
+}
+
+message StatusUpdateRequest {
+  string id = 1;
+  UpdateStatus status = 2;
+  optional string manager_comment = 3;
+  optional string interest_rate = 4;
+}
+
+enum UpdateStatus {
+  UPDATE_STATUS_UNSPECIFIED = 0;
+  UPDATE_STATUS_APPROVING = 1;
+  UPDATE_STATUS_REJECTED = 2;
+}
