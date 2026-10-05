@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package credit.v1;
+
+option java_package = "ru.creditbank.contract.s3.v1";
+option java_multiple_files = true;
+
+import "google/protobuf/timestamp.proto";
+
+service FileService {
+  rpc DownloadFile(DownloadFileRequest)
+    returns (stream DownloadFileChunk);
+
+  rpc GeneratePresignedUrl(GenerateUrlRequest)
+    returns (GenerateUrlResponse);
+}
+
+message DownloadFileRequest {
+  string file_id = 1;
+}
+
+message DownloadFileChunk {
+  bytes data = 1;
+}
+
+message GenerateUrlRequest {
+  string file_id = 1;
+}
+
+message GenerateUrlResponse {
+  string Url = 1;
+  google.protobuf.Timestamp expiresAt = 2;
+}

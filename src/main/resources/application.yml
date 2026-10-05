@@ -29,6 +29,11 @@ spring:
           default-deadline:
             seconds: 5
 
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 100MB
+
 logging:
   level:
     org.springframework.security: DEBUG

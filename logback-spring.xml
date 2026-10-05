@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--temporary moved from resources-->
+<!--temporary moved from src/main/resources-->
 <configuration>
   <appender name="JSON_CONSOLE"
     class="ch.qos.logback.core.ConsoleAppender">
