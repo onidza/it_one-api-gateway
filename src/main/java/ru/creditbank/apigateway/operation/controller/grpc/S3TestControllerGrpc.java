@@ -1,6 +1,8 @@
 package ru.creditbank.apigateway.operation.controller.grpc;
 
 import com.google.protobuf.Timestamp;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Iterator;
@@ -62,6 +64,10 @@ public class S3TestControllerGrpc {
         .body(body);
   }
 
+  @Operation(
+      summary = "Generate presigned URL for file download",
+      description = "Returns a temporary URL for downloading a file directly from S3"
+  )
   @GetMapping("/files/{fileId}/presigned-url")
   public ResponseEntity<PresignedUrlResponseDto> getURLForDownload(@PathVariable String fileId) {
     GenerateUrlResponse response = fileServiceBlockingStub.generatePresignedUrl(
