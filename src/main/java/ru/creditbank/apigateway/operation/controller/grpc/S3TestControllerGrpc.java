@@ -63,9 +63,6 @@ public class S3TestControllerGrpc {
         .body(body);
   }
 
-  @Operation(
-      summary = "Generate presigned URL for file download"
-  )
   @GetMapping("/files/{fileId}/presigned-url")
   public ResponseEntity<PresignedUrlResponseDto> getURLForDownload(@PathVariable String fileId) {
     GenerateUrlResponse response = fileServiceBlockingStub.generatePresignedUrl(
