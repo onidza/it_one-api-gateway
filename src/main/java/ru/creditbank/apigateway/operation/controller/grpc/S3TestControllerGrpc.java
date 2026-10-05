@@ -64,8 +64,7 @@ public class S3TestControllerGrpc {
   }
 
   @Operation(
-      summary = "Generate presigned URL for file download",
-      description = "Returns a temporary URL for downloading a file directly from S3"
+      summary = "Generate presigned URL for file download"
   )
   @GetMapping("/files/{fileId}/presigned-url")
   public ResponseEntity<PresignedUrlResponseDto> getURLForDownload(@PathVariable String fileId) {
